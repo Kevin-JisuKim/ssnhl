@@ -5,6 +5,8 @@ import os
 from tensorflow import keras
 from sklearn.model_selection import KFold
 
+os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+
 def load_dataset():
     dataset = pd.read_excel('./SSNHL.xlsx', sheet_name='SSNHL_REFINE')
     label = dataset['(Label)']
@@ -26,7 +28,7 @@ def stacking_ensemble(model, train_set, train_label, test_set, n_folds=5):
     kfold = KFold(n_splits=n_folds, random_state=0)
 
     train_fold_predict = np.zeros((train_set.shape[0], 1))
-    test_predict = np.zeros((train_set.shape[0], n_folds))
+    test_predict = np.zeros((test_set.shape[0], n_folds))
 
     for count, (train_index, val_index) in enumerate(kfold.split(train_set)):
         x_train = train_set[train_index]
@@ -38,14 +40,14 @@ def stacking_ensemble(model, train_set, train_label, test_set, n_folds=5):
         
         model.fit(x_train, y_train, epochs=100000, batch_size=256, verbose=2)
         train_fold_predict[val_index, :] = model.predict(x_val).reshape(-1, 1)
-        test_predict[:, cnt] = model.predict(test_set)[:, 0]
+        test_predict[:, count] = model.predict(test_set)[:, 0]
 
     test_predict_mean = np.mean(test_predict, axis=1).reshape(-1, 1)
 
     return train_fold_predict, test_predict_mean
 
 if __name__ == '__main__':
-    train_set, train_label, test_set = load_dataset():
+    train_set, train_label, test_set = load_dataset()
 
     model1 = keras.Sequential([
         tf.keras.layers.Dense(64, activation = 'relu'),
