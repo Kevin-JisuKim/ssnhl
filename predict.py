@@ -16,7 +16,7 @@ def predict(main_model, train_label, new_train_set, new_test_set):
     main_model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
     
     main_model.fit(new_train_set, train_label, epochs=epoch * 10, batch_size=batch, callbacks=earlystopping, verbose=1)
-    prediction = model.predict(new_test_set)
+    prediction = main_model.predict(new_test_set)
 
     result_name = str(lr) + '_' + str(epoch) + '_' + str(batch) + '_' + str(dropout) + '.txt'
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     main_model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
 
     main_model.fit(new_train_set, train_label, epochs=epoch * 10, batch_size=batch, callbacks=earlystopping, verbose=1)
-    prediction = model.predict(new_test_set)
+    prediction = main_model.predict(new_test_set)
 
     result_name = str(lr) + '_' + str(epoch) + '_' + str(batch) + '_' + str(dropout) + '.txt'
 
