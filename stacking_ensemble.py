@@ -47,7 +47,7 @@ def ensemble(models, train_set, train_label, test_set):
     new_test_set = np.concatenate(model_test[:], axis=1)
 
     np.savetxt("new_train_set.txt", new_train_set, fmt='%f', delimiter=' ')
-    np.savetxt("new_test_set.txt", new_train_set, fmt='%f', delimiter=' ')
+    np.savetxt("new_test_set.txt", new_test_set, fmt='%f', delimiter=' ')
 
     return new_train_set, new_test_set
 
